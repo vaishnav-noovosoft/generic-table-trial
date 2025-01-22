@@ -1,0 +1,7 @@
+<table>
+  <tbody>
+    @for (item of items(); track item) {
+      <ng-container *ngTemplateOutlet="bodyRowTemplate; context: {$implicit: item}"></ng-container>
+    }
+  </tbody>
+</table>
