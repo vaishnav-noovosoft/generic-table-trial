@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FdTableComponent } from './components/fd-table/fd-table.component';
 import {CdkDrag, CdkDropList} from '@angular/cdk/drag-drop';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,7 +17,9 @@ import {CdkDrag, CdkDropList} from '@angular/cdk/drag-drop';
     BrowserModule,
     AppRoutingModule,
     CdkDropList,
-    CdkDrag
+    CdkDrag,
+    NgbModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

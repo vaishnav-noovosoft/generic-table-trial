@@ -1,16 +1,28 @@
-<table>
+<table class="table table-striped" style="max-width: 800px;">
   <thead>
   <tr>
-    @for (title of columnTitles; track title) {
-      <th>{{ title }}</th>
+    @for (col of columns(); track col.title) {
+      @if (col.showModes && col.showModes.includes(mode())) {
+        <th>{{ col.title }}</th>
+      } @else if (!col.showModes) {
+        <th>{{ col.title }}</th>
+      }
     }
   </tr>
   </thead>
-  <tbody cdkDropList (cdkDropListDropped)="drop($event)" class="item-list">
+  <tbody class="item-list" cdkDropList (cdkDropListDropped)="drop($event)">
     @for (item of _items; track item) {
-      <tr cdkDrag class="item-box">
-        @for (key of columnKeys; track key) {
-          <td>{{ item[key] }}</td>
+      <tr cdkDrag>
+        @for (col of columns(); track col) {
+          @if (!col.showModes || (col.showModes && col.showModes.includes(mode()))) {
+            @if (col.custom) {
+              <td [ngStyle]="{width: col.width}">
+                <ng-container *ngTemplateOutlet="customTemplateMap[col.key]; context: { item: item, mode: mode(), index: $index }"></ng-container>
+              </td>
+            } @else {
+              <td [ngStyle]="{width: col.width}">{{ item[col.key] }}</td>
+            }
+          }
         }
       </tr>
     }

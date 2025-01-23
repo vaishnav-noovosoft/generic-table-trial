@@ -1,3 +1,24 @@
 <h2>FD table</h2>
 
-<app-fd-table [items]="products" [columns]="columns"></app-fd-table>
+<button type="button" (click)="mode = mode === 'read' ? 'edit' : 'read'">Toggle mode read/edit</button>
+
+<p>current mode: <span style="color: green">{{mode}}</span></p>
+
+<app-fd-table [items]="products" [columns]="columns" [mode]="mode">
+  <ng-template #price let-item="item" let-mode="mode">
+    @if (mode === 'read') {
+      {{ item.price }}
+    }
+
+    @if (mode === 'edit') {
+      <input type="text" class="drag-td" [(ngModel)]="item.price"/>
+    }
+  </ng-template>
+  <ng-template #deleteBtn let-index="index" let-mode="mode">
+    @if (mode === 'edit') {
+      <button type="button" class="drag-td" style="display: flex; justify-content: center; align-items: center" (click)="deleteRow(index)">delete</button>
+    }
+  </ng-template>
+</app-fd-table>
+
+

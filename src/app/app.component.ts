@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import {IProduct} from './types';
+import {IFdColumn, IProduct} from './types';
+import {ignoreElements} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,8 @@ import {IProduct} from './types';
 })
 export class AppComponent {
   title = 'generic-table-trial';
+
+  mode: 'edit' | 'read' = "read";
   products: IProduct[] = [
     {
       id: 1,
@@ -151,18 +154,33 @@ export class AppComponent {
       image: "https://example.com/images/smart-home-camera.jpg"
     }
   ];
-  columns = [
+  columns: IFdColumn[] = [
     {
       title: "Id",
       key: "id",
+      width: '20%',
     },
     {
       title: "Name",
       key: "name",
+      width: '20%',
     },
     {
       title: "Price",
       key: "price",
+      width: '20%',
+      custom: true,
+    },
+    {
+      title: 'Action',
+      key: 'deleteBtn',
+      width: '20%',
+      custom: true,
+      showModes: ['edit'],
     }
-  ]
+  ];
+
+  protected deleteRow(index: number) {
+    this.products.splice(index, 1);
+  }
 }

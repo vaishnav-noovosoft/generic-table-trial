@@ -1,19 +1,23 @@
 .item-list {
-  border: solid 1px #ccc;
-  border-radius: 5px;
+  max-width: 900px;
 }
 
-.item-box {
+.cdk-drag {
+  cursor: move;
+  background-color: white;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
   background-color: cornflowerblue;
+  cursor: move;
+  display: table;
+  padding: 0.5rem 0.5rem;
   color: white;
-  cursor: grab;
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  border-bottom: 1px solid #ccc;
 }
 
-.cdk-drag-preview {}
-
-.cdk-drag-placeholder {}
+.cdk-drag-placeholder {
+}
 
 .cdk-drg-animation {}
 

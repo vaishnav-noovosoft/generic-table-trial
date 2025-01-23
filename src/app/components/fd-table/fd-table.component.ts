@@ -1,10 +1,10 @@
 import {
-  Component,
-  input, OnInit,
+  AfterContentInit,
+  Component, ContentChildren, Input,
+  input, OnInit, QueryList, TemplateRef,
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {IProduct} from '../../types';
-import {BehaviorSubject} from 'rxjs';
+import {IFdColumn, IProduct} from '../../types';
 
 @Component({
   selector: 'app-fd-table',
@@ -13,16 +13,18 @@ import {BehaviorSubject} from 'rxjs';
   templateUrl: './fd-table.component.html',
   styleUrl: './fd-table.component.scss'
 })
-export class FdTableComponent implements OnInit {
+export class FdTableComponent implements OnInit, AfterContentInit {
   items = input();
   _items: any[] = [];
 
-  columns = input<{title: string, key: string}[]>([]);
+  @Input() m: "edit" | "read" = "edit";
 
-  triggerColumnUpdate = input<BehaviorSubject<{title: string, key: string}[]>>(new BehaviorSubject([] as any[]));
+  mode = input<"read" | "edit">("edit");
 
-  columnTitles: string[] = [];
-  columnKeys: string[] = [];
+  columns = input<IFdColumn[]>([]);
+
+  @ContentChildren(TemplateRef) customTemplates!: QueryList<TemplateRef<any>>;
+  customTemplateMap: { [key: string]: TemplateRef<any> } = {};
 
   ngOnInit(): void {
     if (this.items() === undefined) {
@@ -30,10 +32,18 @@ export class FdTableComponent implements OnInit {
     }
 
     this._items = this.items() as any[];
+  }
 
-    this.triggerColumnUpdate().subscribe(() => {
-      this.columnTitles = this.columns().map((col => col.title));
-      this.columnKeys = this.columns().map((col) => col.key);
+  ngAfterContentInit() {
+    const templateKeys = this.customTemplates.toArray();
+
+    console.log(templateKeys[0]);
+
+    this.columns().forEach((col) => {
+      const tmp = templateKeys.find((i) => (i as any)._declarationTContainer.localNames.includes(col.key));
+      if (col.custom) {
+        this.customTemplateMap[col.key] = tmp!;
+      }
     });
   }
 
