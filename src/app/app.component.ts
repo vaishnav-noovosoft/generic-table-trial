@@ -151,4 +151,18 @@ export class AppComponent {
       image: "https://example.com/images/smart-home-camera.jpg"
     }
   ];
+  columns = [
+    {
+      title: "Id",
+      key: "id",
+    },
+    {
+      title: "Name",
+      key: "name",
+    },
+    {
+      title: "Price",
+      key: "price",
+    }
+  ]
 }

@@ -1,13 +1,10 @@
 import {
-  AfterViewInit,
   Component,
-  contentChild,
-  input,
-  InputSignal,
-  OnInit, Signal,
-  TemplateRef,
-  viewChild
+  input, OnInit,
 } from '@angular/core';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {IProduct} from '../../types';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-fd-table',
@@ -16,21 +13,31 @@ import {
   templateUrl: './fd-table.component.html',
   styleUrl: './fd-table.component.scss'
 })
-export class FdTableComponent<T> implements OnInit {
-  items: InputSignal<T[] | undefined> = input<T[]>();
+export class FdTableComponent implements OnInit {
+  items = input();
+  _items: any[] = [];
 
-  _bodyRowTemplate: Signal<TemplateRef<any> | undefined> = contentChild<TemplateRef<any>>('body', { descendants: false });
-  bodyRowTemplate: TemplateRef<any> | null = null;
+  columns = input<{title: string, key: string}[]>([]);
+
+  triggerColumnUpdate = input<BehaviorSubject<{title: string, key: string}[]>>(new BehaviorSubject([] as any[]));
+
+  columnTitles: string[] = [];
+  columnKeys: string[] = [];
 
   ngOnInit(): void {
     if (this.items() === undefined) {
       new Error('No items provided');
     }
+
+    this._items = this.items() as any[];
+
+    this.triggerColumnUpdate().subscribe(() => {
+      this.columnTitles = this.columns().map((col => col.title));
+      this.columnKeys = this.columns().map((col) => col.key);
+    });
   }
 
-  ngAfterContentInit(): void {
-    if (this._bodyRowTemplate() !== undefined) {
-      this.bodyRowTemplate = this._bodyRowTemplate() as TemplateRef<any>;
-    }
+  protected drop(event: CdkDragDrop<IProduct[]>) {
+    moveItemInArray(this._items, event.previousIndex, event.currentIndex);
   }
 }

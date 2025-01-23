@@ -1,7 +1,18 @@
 <table>
-  <tbody>
-    @for (item of items(); track item) {
-      <ng-container *ngTemplateOutlet="bodyRowTemplate; context: {$implicit: item}"></ng-container>
+  <thead>
+  <tr>
+    @for (title of columnTitles; track title) {
+      <th>{{ title }}</th>
+    }
+  </tr>
+  </thead>
+  <tbody cdkDropList (cdkDropListDropped)="drop($event)" class="item-list">
+    @for (item of _items; track item) {
+      <tr cdkDrag class="item-box">
+        @for (key of columnKeys; track key) {
+          <td>{{ item[key] }}</td>
+        }
+      </tr>
     }
   </tbody>
 </table>
