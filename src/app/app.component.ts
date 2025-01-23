@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {IFdColumn, IProduct} from './types';
-import {ignoreElements} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +8,7 @@ import {ignoreElements} from 'rxjs';
   standalone: false,
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'generic-table-trial';
 
   mode: 'edit' | 'read' = "read";
@@ -154,6 +154,7 @@ export class AppComponent {
       image: "https://example.com/images/smart-home-camera.jpg"
     }
   ];
+  productBehaviourSubject = new BehaviorSubject<IProduct[]>([]);
   columns: IFdColumn[] = [
     {
       title: "Id",
@@ -180,7 +181,12 @@ export class AppComponent {
     }
   ];
 
+  ngOnInit(): void {
+    this.productBehaviourSubject.next(this.products);
+  }
+
   protected deleteRow(index: number) {
-    this.products.splice(index, 1);
+    this.products = this.products.filter((product, itemIndex) => itemIndex !== index);
+    this.productBehaviourSubject.next(this.products);
   }
 }

@@ -4,7 +4,7 @@
 
 <p>current mode: <span style="color: green">{{mode}}</span></p>
 
-<app-fd-table [items]="products" [columns]="columns" [mode]="mode">
+<app-fd-table [itemsBehaviourSubject]="productBehaviourSubject" [columns]="columns" [mode]="mode">
   <ng-template #price let-item="item" let-mode="mode">
     @if (mode === 'read') {
       {{ item.price }}

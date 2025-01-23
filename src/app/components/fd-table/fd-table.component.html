@@ -11,13 +11,13 @@
   </tr>
   </thead>
   <tbody class="item-list" cdkDropList (cdkDropListDropped)="drop($event)">
-    @for (item of _items; track item) {
+    @for (item of _items; track item; let itemIndex = $index) {
       <tr cdkDrag>
-        @for (col of columns(); track col) {
+        @for (col of columns(); track col;) {
           @if (!col.showModes || (col.showModes && col.showModes.includes(mode()))) {
             @if (col.custom) {
               <td [ngStyle]="{width: col.width}">
-                <ng-container *ngTemplateOutlet="customTemplateMap[col.key]; context: { item: item, mode: mode(), index: $index }"></ng-container>
+                <ng-container *ngTemplateOutlet="customTemplateMap[col.key]; context: { item: item, mode: mode(), index: itemIndex }"></ng-container>
               </td>
             } @else {
               <td [ngStyle]="{width: col.width}">{{ item[col.key] }}</td>

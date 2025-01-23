@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {IFdColumn, IProduct} from '../../types';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-fd-table',
@@ -14,7 +15,7 @@ import {IFdColumn, IProduct} from '../../types';
   styleUrl: './fd-table.component.scss'
 })
 export class FdTableComponent implements OnInit, AfterContentInit {
-  items = input();
+  itemsBehaviourSubject = input<BehaviorSubject<any[]>>();
   _items: any[] = [];
 
   @Input() m: "edit" | "read" = "edit";
@@ -27,17 +28,13 @@ export class FdTableComponent implements OnInit, AfterContentInit {
   customTemplateMap: { [key: string]: TemplateRef<any> } = {};
 
   ngOnInit(): void {
-    if (this.items() === undefined) {
-      new Error('No items provided');
-    }
-
-    this._items = this.items() as any[];
+    this.itemsBehaviourSubject()?.subscribe((items) => {
+      this._items = items;
+    })
   }
 
   ngAfterContentInit() {
     const templateKeys = this.customTemplates.toArray();
-
-    console.log(templateKeys[0]);
 
     this.columns().forEach((col) => {
       const tmp = templateKeys.find((i) => (i as any)._declarationTContainer.localNames.includes(col.key));
